@@ -1,0 +1,280 @@
+<!-- Complete Project Details at: https://RandomNerdTutorials.com/ -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ESP IoT Firebase App</title>
+
+    <!-- update the version number as needed -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+
+    <!-- include only the Firebase features as you need -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+    <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+
+    <script>
+     // REPLACE WITH YOUR web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBATTUxwBvp_uILTeOGK66pADbr-ChwOGE",
+        authDomain: "iot-rpl-1fac9.firebaseapp.com",
+        databaseURL: "https://iot-rpl-1fac9-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "iot-rpl-1fac9",
+        storageBucket: "iot-rpl-1fac9.appspot.com",
+        messagingSenderId: "764019006490",
+        appId: "1:764019006490:web:74713d1fdf21589dc385a3",
+        measurementId: "G-N7QLVPPM6B"
+      };
+
+      // Initialize firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Make auth and database references
+      const auth = firebase.auth();
+      const db = firebase.database();
+
+    </script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <!--AUTHENTICATION BAR (USER DETAILS/LOGOUT BUTTON)-->
+  <!-- <div id="authentication-bar" style="display: none;">
+    <p><span id="authentication-status">User logged in</span>
+       <span id="user-details">USEREMAIL</span>
+       <a href="/" id="logout-link">(logout)</a>
+    </p>
+  </div> -->
+
+  <!--LOGIN FORM-->
+  <!-- <form id="login-form" style="display: none;">
+    <div class="form-elements-container">
+      <label for="input-email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Username" id="input-email" required>
+
+      <label for="input-password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" id="input-password" required>
+
+      <button type="submit" id="login-button">Login</button>
+      <p id="error-message" style="color:red;"></p>
+    </div>
+  </form> -->
+
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <aside class="left-sidebar">
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="./index.html" class="text-nowrap logo-img">
+            <img src="assets/images/logos/dark-logo.svg" width="180" alt="" />
+          </a>
+          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <i class="ti ti-x fs-8"></i>
+          </div>
+        </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">EXTRA</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="chart.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-article"></i>
+                </span>
+                <span class="hide-menu">Chart</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="history.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-alert-circle"></i>
+                </span>
+                <span class="hide-menu">Sensor History</span>
+              </a>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">AUTH</span>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="setting.html" aria-expanded="false">
+                <span>
+                  <i class="ti ti-basket"></i>
+                </span>
+                <span class="hide-menu">Setting</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="login.html" id="logout-link" aria-expanded="false">
+                <span>
+                  <i class="ti ti-logout"></i>
+                </span>
+                <span class="hide-menu">Logout</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+      </div>
+      <!-- End Sidebar scroll-->
+    </aside>
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <header class="app-header">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <ul class="navbar-nav">
+            <li class="nav-item d-block d-xl-none">
+              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                <i class="ti ti-menu-2"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                <i class="ti ti-bell-ringing"></i>
+                <div class="notification bg-primary rounded-circle"></div>
+              </a>
+            </li>
+          </ul>
+          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+              <a href="index.html" target="_blank" class="btn btn-primary">Selamat Datang !</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <img src="assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                  <div class="message-body">
+                    <a href="profile.html" class="d-flex align-items-center gap-2 dropdown-item">
+                      <i class="ti ti-user fs-6"></i>
+                      <p class="mb-0 fs-3">My Profile</p>
+                    </a>
+                    <a href="login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <div class="container-fluid">
+        <!--  Row 1 -->
+          <div class="row">
+            <div class="col-lg-12">
+              <!-- Monthly Earnings -->
+              <div class="card">
+                <div class="card-body">
+                  <div class="row alig n-items-start">
+                    <div class="col-8">
+                      <h5 class="card-title mb-9 fw-semibold"> Temperature </h5>
+                      <h4 class="fw-semibold mb-3" id="temp"> ºC</h4>
+                      <div class="d-flex align-items-center pb-1">
+                        <span
+                          class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-arrow-down-right text-danger"></i>
+                        </span>
+                        <p class="text-dark me-1 fs-3 mb-0">B210BD</p>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="d-flex justify-content-end">
+                        <div
+                          class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <!-- Monthly Earnings -->
+              <div class="card">
+                <div class="card-body">
+                  <div class="row alig n-items-start">
+                    <div class="col-8">
+                      <h5 class="card-title mb-9 fw-semibold"> Distance </h5>
+                      <h4 class="fw-semibold mb-3" id="dis"> cm</h4>
+                      <div class="d-flex align-items-center pb-1">
+                        <span
+                          class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
+                          <i class="ti ti-arrow-down-right text-danger"></i>
+                        </span>
+                        <p class="text-dark me-1 fs-3 mb-0">HCR-04</p>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="d-flex justify-content-end">
+                        <div
+                          class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+  <!--CONTENT (SENSOR READINGS)-->
+  <!-- <div class="content-sign-in" id="content-sign-in" style="display: none;">
+    <div class="cards"> -->
+      <!--TEMPERATURE-->
+      <!-- <div class="card">
+        <p><i class="fas fa-thermometer-half" style="color:#059e8a;"></i> TEMPERATURE</p>
+        <p><span class="reading"><span id="temp"></span> &deg;C</span></p>
+      </div> -->
+      <!-- DISTANCE-->
+      <!-- <div class="card">
+        <p><i class="fas fa-tint" style="color:#00add6;"></i> DISTANCE</p>
+        <p><span class="reading"><span id="hum"></span> &percnt;</span></p>
+      </div> -->
+      <!--PRESSURE-->
+      <!-- <div class="card">
+        <p><i class="fas fa-angle-double-down" style="color:#e1e437;"></i> PRESSURE</p>
+        <p><span class="reading"><span id="pres"></span> hPa</span></p>
+      </div> -->
+    <!-- </div>
+  </div> -->
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/sidebarmenu.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/index.js"></script>
+  </body>
+</html>
+
